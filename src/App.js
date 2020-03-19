@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './components/App.css'
+import './components/App.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './components/Home.js';
-import New_Reminder from './components/New_Reminder.js'
-import Navigation from './components/Navigation.js'
+import New_Reminder from './components/New_Reminder.js';
+import Navigation from './components/Navigation.js';
+import index from './index.html';
 
 class App extends React.Component {
   render() {
