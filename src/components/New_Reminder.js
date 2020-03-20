@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import firebase from "./firebase.js";
+import DayPicker from "react-day-picker";
 
 class App extends Component {
   constructor() {
@@ -77,6 +78,11 @@ class App extends Component {
                 placeholder="description"
                 onChange={this.handleChange}
                 value={this.state.currentItem}
+              />
+              <input
+              type="date"
+              name="date"
+              id="date_input"
               />
               <button>Add Item</button>
             </form>
