@@ -83,6 +83,8 @@ class App extends Component {
               type="date"
               name="date"
               id="date_input"
+              onChange={this.handleChange}
+              value={this.state.currentItem}
               />
               <button>Add Item</button>
             </form>
