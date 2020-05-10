@@ -1,117 +1,129 @@
-import React, { Component } from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import firebase from "./firebase.js";
-import DayPicker from "react-day-picker";
+import React, { Component } from 'react';
+import moment from 'moment-timezone';
+import { connect } from 'react-redux';
+import RemindersList from './Reminders';
+import { addReminder, deleteReminder, clearReminders } from '../actions';
+import PropTypes from 'prop-types';
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      currentItem: "",
-      username: "",
-      items: []
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  handleChange(e) {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  }
-  handleSubmit(e) {
-    e.preventDefault();
-    const itemsRef = firebase.database().ref("items");
-    const item = {
-      title: this.state.currentItem,
-      user: this.state.username
-    };
-    itemsRef.push(item);
-    this.setState({
-      currentItem: "",
-      username: ""
-    });
-  }
-  componentDidMount() {
-    const itemsRef = firebase.database().ref("items");
-    itemsRef.on("value", snapshot => {
-      let items = snapshot.val();
-      let newState = [];
-      for (let item in items) {
-        newState.push({
-          id: item,
-          title: items[item].title,
-          user: items[item].user
-        });
-      }
-      this.setState({
-        items: newState
-      });
-    });
-  }
-  removeItem(itemId) {
-    const itemRef = firebase.database().ref(`/items/${itemId}`);
-    itemRef.remove();
-  }
-  render() {
-    return (
-      <div className="app">
-        <header>
-          <div className="wrapper">
-            <h1>Reminder</h1>
-          </div>
-        </header>
-        <div className="container">
-          <section className="add-item">
-            <form onSubmit={this.handleSubmit}>
-              <input
-                type="text"
-                name="username"
-                placeholder="reminder"
-                onChange={this.handleChange}
-                value={this.state.username}
-              />
-              <input
-                type="text"
-                name="currentItem"
-                placeholder="description"
-                onChange={this.handleChange}
-                value={this.state.currentItem}
-              />
-              <input
-              type="date"
-              name="date"
-              id="date_input"
-              onChange={this.handleChange}
-              value={this.state.currentItem}
-              />
-              <button>Add Item</button>
-            </form>
-          </section>
-          <section className="display-item">
-            <div className="wrapper">
-              <ul>
-                {this.state.items.map(item => {
-                  return (
-                    <li key={item.id}>
-                      <h3>{item.title}</h3>
-                      <p>
-                        {" "}
-                        {item.user}
-                        <button onClick={() => this.removeItem(item.id)}>
-                          Remove Item
+
+class New_Reminder extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            disabled: true
+        };
+        this.addCheckActive = this.addCheckActive.bind(this);
+    }
+
+    componentDidMount () {
+        this.taskInput.focus();
+    }
+
+    addReminder (e) {
+        this.props.addReminder(
+            this.taskInput.value,
+            moment(this.timeInput.value).toDate()
+        );
+        if (e.type === 'submit') e.preventDefault();
+        this.taskInput.value = '';
+        this.setState({disabled: true});
+    }
+
+    deleteReminder (id) {
+        this.props.deleteReminder(id);
+    }
+
+    addCheckActive() {
+        const newValue = this.taskInput.value;
+        if (newValue > '' && this.state.disabled)
+            this.setState({disabled: false});
+        else if (!newValue && !this.state.disabled)
+            this.setState({disabled: true});
+    }
+
+    renderReminders() {
+        const { reminders } = this.props;
+        return (
+            <ul className="list-group">
+                {
+                    reminders.map((reminder) => (
+                        <li key={reminder.id} className="list-group-item clearfix">
+                            <span className="list-item">{reminder.text}</span>
+                            <button
+                                className="list-item btn btn-danger btn-xs pull-right"
+                                onClick={() => this.deleteReminder(reminder.id)}
+                            >
+                                &#x2715;
+                            </button>
+                            <div className="list-item time">
+                                {
+                                    moment(new Date(reminder.dueDate))
+                                    .locale('ru')
+                                    .fromNow()
+                                }
+                            </div>
+                        </li>))
+                }
+            </ul>
+        );
+    }
+
+    render() {
+        return (
+            <div className="App">
+                <div className="App-title">
+                    <h2>Reminder Pro</h2>
+                </div>
+                <div className="form-inline reminder-form">
+                    <div className="form-group">
+                        <input
+                            className="form-control"
+                            placeholder="I have to…"
+                            ref={(c) => { this.taskInput = c; }}
+                            onChange={this.addCheckActive}
+                        />
+                        <input
+                            className="form-control"
+                            type="datetime-local"
+                            defaultValue={moment(Date.now()).format('YYYY-MM-DDTHH:mm')}
+                            ref={(c) => { this.timeInput = c; }}
+                        />
+                        <button
+                            className="btn btn-success"
+                            type="button"
+                            onClick={(e) => this.addReminder(e)}
+                            disabled={this.state.disabled}
+                        >
+                            Add this
                         </button>
-                      </p>
-                    </li>
-                  );
-                })}
-              </ul>
+                    </div>
+                    <RemindersList
+                        reminders={this.props.reminders}
+                        deleteReminder={this.props.deleteReminder}
+                        updateInterval="1000"
+                    />
+                    {this.props.reminders.length > 1 &&
+                        <button
+                            className="btn btn-danger"
+                            type="button"
+                            onClick={() => this.props.clearReminders()}
+                        >
+                            Clear all
+                    </button>}
+                </div>
             </div>
-          </section>
-        </div>
-      </div>
-    );
-  }
+        );
+    }
 }
-export default App;
+
+App.propTypes = {
+    addReminder: React.PropTypes.func.isRequired,
+    deleteReminder: React.PropTypes.func.isRequired,
+    clearReminders: React.PropTypes.func.isRequired,
+    reminders: React.PropTypes.array.isRequired,
+};
+
+
+export default connect((state) => ({
+    reminders: state
+}), { addReminder, deleteReminder, clearReminders })(New_Reminder);
