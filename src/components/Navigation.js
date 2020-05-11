@@ -1,13 +1,13 @@
 import React from 'react';
+ 
 import { NavLink } from 'react-router-dom';
-import stylesheet from './components.css'
  
 const Navigation = () => {
     return (
-       <div class='nav_bar'>
+       <div>
           <NavLink to="/">Home</NavLink>
-          <NavLink to='/New_Reminder'>New Reminder</NavLink>
-       </div>
+          <NavLink to="/New_Reminder">New_Reminder</NavLink>
+        </div>
     );
 }
  

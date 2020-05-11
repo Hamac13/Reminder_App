@@ -3,8 +3,6 @@ import moment from 'moment-timezone';
 import { connect } from 'react-redux';
 import RemindersList from './Reminders';
 import { addReminder, deleteReminder, clearReminders } from '../actions';
-import PropTypes from 'prop-types';
-
 
 
 class New_Reminder extends Component {
@@ -118,10 +116,10 @@ class New_Reminder extends Component {
 }
 
 New_Reminder.propTypes = {
-    addReminder: PropTypes.func.isRequired,
-    deleteReminder: PropTypes.func.isRequired,
-    clearReminders: PropTypes.func.isRequired,
-    reminders: PropTypes.array.isRequired,
+    addReminder: React.PropTypes.func.isRequired,
+    deleteReminder: React.PropTypes.func.isRequired,
+    clearReminders: React.PropTypes.func.isRequired,
+    reminders: React.PropTypes.array.isRequired,
 };
 
 
