@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment-timezone';
-import PropTypes from 'prop-types';
+
 
 class RemindersList extends React.Component {
     componentWillMount () {
@@ -41,7 +41,7 @@ class RemindersList extends React.Component {
 }
 
 RemindersList.propTypes = {
-    reminders: PropTypes.array.isRequired,
+    reminders: React.PropTypes.array.isRequired,
     deleteReminder: React.PropTypes.func.isRequired,
     updateInterval: React.PropTypes.string,
 };

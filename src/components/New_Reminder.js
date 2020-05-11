@@ -6,6 +6,7 @@ import { addReminder, deleteReminder, clearReminders } from '../actions';
 import PropTypes from 'prop-types';
 
 
+
 class New_Reminder extends Component {
     constructor(props) {
         super(props);
@@ -116,7 +117,7 @@ class New_Reminder extends Component {
     }
 }
 
-App.propTypes = {
+New_Reminder.propTypes = {
     addReminder: React.PropTypes.func.isRequired,
     deleteReminder: React.PropTypes.func.isRequired,
     clearReminders: React.PropTypes.func.isRequired,
