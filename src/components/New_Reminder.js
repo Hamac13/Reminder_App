@@ -118,10 +118,10 @@ class New_Reminder extends Component {
 }
 
 New_Reminder.propTypes = {
-    addReminder: React.PropTypes.func.isRequired,
-    deleteReminder: React.PropTypes.func.isRequired,
-    clearReminders: React.PropTypes.func.isRequired,
-    reminders: React.PropTypes.array.isRequired,
+    addReminder: PropTypes.func.isRequired,
+    deleteReminder: PropTypes.func.isRequired,
+    clearReminders: PropTypes.func.isRequired,
+    reminders: PropTypes.array.isRequired,
 };
 
 
